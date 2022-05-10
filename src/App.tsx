@@ -1,24 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+
+type Letter =
+  | "A"
+  | "B"
+  | "C"
+  | "D"
+  | "E"
+  | "F"
+  | "G"
+  | "H"
+  | "I"
+  | "J"
+  | "K"
+  | "L"
+  | "M"
+  | "N"
+  | "O"
+  | "P"
+  | "Q"
+  | "R"
+  | "S"
+  | "T"
+  | "U"
+  | "V"
+  | "W"
+  | "X"
+  | "Y"
+  | "Z";
+
+interface WordWheelDefinition {
+  centerLetter: Letter;
+  outerLetters: [
+    Letter,
+    Letter,
+    Letter,
+    Letter,
+    Letter,
+    Letter,
+    Letter,
+    Letter
+  ];
+}
+
+interface WordWheelState {
+  words: String[];
+}
+
+export interface WordWheel {
+  definition: WordWheelDefinition;
+  state: WordWheelState;
+}
+
+const WORD_WHEEL_DEFINITION: WordWheelDefinition = {
+  centerLetter: "A",
+  outerLetters: ["C", "T", "G", "T", "E", "A", "I", "S"],
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <header>Word Wheel</header>
     </div>
   );
 }
