@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.wheel-segment > :is(path, circle)[data-selected="true"] {
+  fill: #707070;
+}
+
+.wheel-segment:hover > :is(path, circle) {
+  fill: #dcdcdc;
+}
+
+.wheel-segment:hover > :is(path, circle)[data-selected="true"] {
+  fill: #999999;
+}
