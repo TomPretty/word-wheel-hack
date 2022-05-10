@@ -1,17 +1,14 @@
-import { WordWheel } from "./App";
-import { WordWheelDefinition, WordWheelLogic } from "./logic";
+import { wordWheelFactory } from "./factories";
+import { WordWheelLogic } from "./logic";
 
 describe("WordWheelLogic.update", () => {
-  const WORD_WHEEL_DEFINITION: WordWheelDefinition = {
-    centerLetter: "A",
-    outerLetters: ["C", "T", "G", "T", "E", "A", "I", "S"],
-  };
-
   it("accepts a valid word", () => {
-    const wordWheel: WordWheel = {
-      definition: WORD_WHEEL_DEFINITION,
-      state: { words: [] },
-    };
+    const wordWheel = wordWheelFactory.build({
+      definition: {
+        centerLetter: "C",
+        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+      },
+    });
     const word = "CAGE";
     const logic = new WordWheelLogic([word]);
 
@@ -22,10 +19,12 @@ describe("WordWheelLogic.update", () => {
   });
 
   it("rejects an invalid word", () => {
-    const wordWheel: WordWheel = {
-      definition: WORD_WHEEL_DEFINITION,
-      state: { words: [] },
-    };
+    const wordWheel = wordWheelFactory.build({
+      definition: {
+        centerLetter: "C",
+        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+      },
+    });
     const word = "CAGE";
     const logic = new WordWheelLogic(["RAGE"]);
 
@@ -35,12 +34,14 @@ describe("WordWheelLogic.update", () => {
   });
 
   it("rejects a valid word if it doesn't use the middle letter", () => {
-    const wordWheel: WordWheel = {
-      definition: WORD_WHEEL_DEFINITION,
-      state: { words: [] },
-    };
-    const word = "TEST";
-    const logic = new WordWheelLogic(["TEST"]);
+    const wordWheel = wordWheelFactory.build({
+      definition: {
+        centerLetter: "C",
+        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+      },
+    });
+    const word = "AGE";
+    const logic = new WordWheelLogic([word]);
 
     const result = logic.update(wordWheel, word);
 
@@ -48,12 +49,14 @@ describe("WordWheelLogic.update", () => {
   });
 
   it("rejects a valid word if it uses letters that aren't available", () => {
-    const wordWheel: WordWheel = {
-      definition: WORD_WHEEL_DEFINITION,
-      state: { words: [] },
-    };
-    const word = "GAGE";
-    const logic = new WordWheelLogic(["GAGE"]);
+    const wordWheel = wordWheelFactory.build({
+      definition: {
+        centerLetter: "C",
+        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+      },
+    });
+    const word = "CARE";
+    const logic = new WordWheelLogic([word]);
 
     const result = logic.update(wordWheel, word);
 

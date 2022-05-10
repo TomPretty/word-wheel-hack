@@ -40,11 +40,11 @@ export interface WordWheelDefinition {
   ];
 }
 
-interface WordWheelState {
+export interface WordWheelState {
   words: String[];
 }
 
-interface WordWheel {
+export interface WordWheel {
   definition: WordWheelDefinition;
   state: WordWheelState;
 }
