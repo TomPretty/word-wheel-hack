@@ -62,4 +62,20 @@ describe("WordWheelLogic.update", () => {
 
     expect(result.valid).toBeFalsy();
   });
+
+  it("rejects a valid word if it has already been played", () => {
+    const word = "CAGE";
+    const wordWheel = wordWheelFactory.build({
+      definition: {
+        centerLetter: "C",
+        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+      },
+      state: { words: [word] },
+    });
+    const logic = new WordWheelLogic([word]);
+
+    const result = logic.update(wordWheel, word);
+
+    expect(result.valid).toBeFalsy();
+  });
 });

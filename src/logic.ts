@@ -93,6 +93,7 @@ export class WordWheelLogic {
     return (
       this.#includesCenterLetter(wordWheel, word) &&
       this.#onlyUsesAvailableLetters(wordWheel, word) &&
+      this.#hasNotAlreadyBeenPlayed(wordWheel, word) &&
       this.#isInListOfValidWords(word)
     );
   }
@@ -103,6 +104,10 @@ export class WordWheelLogic {
 
   #isInListOfValidWords(word: string): boolean {
     return this.validWords.includes(word);
+  }
+
+  #hasNotAlreadyBeenPlayed(wordWheel: WordWheel, word: string): boolean {
+    return !wordWheel.state.words.includes(word);
   }
 
   #onlyUsesAvailableLetters(wordWheel: WordWheel, word: string): boolean {
