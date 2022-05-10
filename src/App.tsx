@@ -6,6 +6,7 @@ import {
   WordWheelGuess,
   WordWheelGuessElement,
   WordWheelLogic,
+  WordWheelUpdateError,
 } from "./logic";
 import "./App.css";
 import { WORDS } from "./words";
@@ -23,6 +24,8 @@ function App() {
     state: { words: [] },
   });
 
+  const [error, setError] = useState<WordWheelUpdateError | null>(null);
+
   const [guess, setGuess] = useState<WordWheelGuess>([]);
 
   function toggleGuessElement(element: WordWheelGuessElement) {
@@ -31,23 +34,34 @@ function App() {
     } else {
       setGuess([...guess, element]);
     }
+    resetError();
   }
 
   function submit() {
+    resetError();
+
     const update = logic.update(wordWheel, guess);
 
     if (update.valid) {
       setWordWheel(update.wordWheel);
       setGuess([]);
+    } else {
+      setError(update.error);
     }
   }
 
   function reset() {
     setGuess([]);
+    resetError();
   }
 
   function deleteLastElement() {
     setGuess(guess.slice(0, -1));
+    resetError();
+  }
+
+  function resetError() {
+    setError(null);
   }
 
   return (
@@ -55,6 +69,7 @@ function App() {
       <header>Word Wheel</header>
       <p>Words: {wordWheel.state.words.join(", ")}</p>
       <p>Word: {guessToWord(guess, wordWheel.definition)}</p>
+      {error && <p>Error: {error}</p>}
 
       <div>
         <button onClick={submit}>Submit</button>

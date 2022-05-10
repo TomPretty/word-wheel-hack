@@ -1,5 +1,12 @@
 import { wordWheelFactory } from "./factories";
-import { Letter, OuterLetters, WordWheelGuess, WordWheelLogic } from "./logic";
+import {
+  Letter,
+  OuterLetters,
+  WordWheelGuess,
+  WordWheelLogic,
+  WordWheelUpdateInvalid,
+  WordWheelUpdateValid,
+} from "./logic";
 
 describe("WordWheelLogic.update", () => {
   it("accepts a valid word", () => {
@@ -15,7 +22,9 @@ describe("WordWheelLogic.update", () => {
     const result = logic.update(wordWheel, guess);
 
     expect(result.valid).toBeTruthy();
-    expect(result.wordWheel.state.words[0]).toBe("CAGE");
+    expect((result as WordWheelUpdateValid).wordWheel.state.words[0]).toBe(
+      "CAGE"
+    );
   });
 
   it("rejects an invalid word", () => {
@@ -31,6 +40,9 @@ describe("WordWheelLogic.update", () => {
     const result = logic.update(wordWheel, guess);
 
     expect(result.valid).toBeFalsy();
+    expect((result as WordWheelUpdateInvalid).error).toEqual(
+      "NOT_IN_DICTIONARY"
+    );
   });
 
   it("rejects a valid word if it doesn't use the center letter", () => {
@@ -46,6 +58,9 @@ describe("WordWheelLogic.update", () => {
     const result = logic.update(wordWheel, guess);
 
     expect(result.valid).toBeFalsy();
+    expect((result as WordWheelUpdateInvalid).error).toEqual(
+      "DOES_NOT_USE_MIDDLE_LETTER"
+    );
   });
 
   it("rejects a valid word if it uses duplicate letters", () => {
@@ -61,6 +76,9 @@ describe("WordWheelLogic.update", () => {
     const result = logic.update(wordWheel, guess);
 
     expect(result.valid).toBeFalsy();
+    expect((result as WordWheelUpdateInvalid).error).toEqual(
+      "USES_DUPLICATE_LETTER"
+    );
   });
 
   it("rejects a valid word if it has already been played", () => {
@@ -78,6 +96,9 @@ describe("WordWheelLogic.update", () => {
     const result = logic.update(wordWheel, guess);
 
     expect(result.valid).toBeFalsy();
+    expect((result as WordWheelUpdateInvalid).error).toEqual(
+      "ALREADY_BEEN_PLAYED"
+    );
   });
 });
 

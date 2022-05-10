@@ -55,10 +55,23 @@ export type WordWheelGuessElement = "CENTER" | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export type WordWheelGuess = WordWheelGuessElement[];
 
-interface WordWheelUpdate {
-  valid: boolean;
+export type WordWheelUpdateError =
+  | "DOES_NOT_USE_MIDDLE_LETTER"
+  | "USES_DUPLICATE_LETTER"
+  | "ALREADY_BEEN_PLAYED"
+  | "NOT_IN_DICTIONARY";
+
+export interface WordWheelUpdateInvalid {
+  valid: false;
+  error: WordWheelUpdateError;
+}
+
+export interface WordWheelUpdateValid {
+  valid: true;
   wordWheel: WordWheel;
 }
+
+type WordWheelUpdate = WordWheelUpdateInvalid | WordWheelUpdateValid;
 
 export class WordWheelLogic {
   validWords: string[];
@@ -68,13 +81,17 @@ export class WordWheelLogic {
   }
 
   update(wordWheel: WordWheel, guess: WordWheelGuess): WordWheelUpdate {
-    if (this.#isValid(wordWheel, guess)) {
+    const validation = this.#validate(wordWheel, guess);
+    if (validation === null) {
       return this.#validUpdate(wordWheel, guess);
     }
-    return this.#invalidUpdate(wordWheel);
+    return this.#invalidUpdate(validation);
   }
 
-  #validUpdate(wordWheel: WordWheel, guess: WordWheelGuess): WordWheelUpdate {
+  #validUpdate(
+    wordWheel: WordWheel,
+    guess: WordWheelGuess
+  ): WordWheelUpdateValid {
     return {
       valid: true,
       wordWheel: this.#addValidWord(
@@ -94,30 +111,33 @@ export class WordWheelLogic {
     };
   }
 
-  #invalidUpdate(wordWheel: WordWheel) {
-    return { valid: false, wordWheel };
+  #invalidUpdate(error: WordWheelUpdateError): WordWheelUpdateInvalid {
+    return { valid: false, error };
   }
 
-  #isValid(wordWheel: WordWheel, guess: WordWheelGuess): boolean {
+  #validate(
+    wordWheel: WordWheel,
+    guess: WordWheelGuess
+  ): WordWheelUpdateError | null {
     if (this.#doesNotIncludeCenterLetter(guess)) {
-      return false;
+      return "DOES_NOT_USE_MIDDLE_LETTER";
     }
 
     if (this.#usesDuplicateLetters(guess)) {
-      return false;
+      return "USES_DUPLICATE_LETTER";
     }
 
     const word = guessToWord(guess, wordWheel.definition);
 
     if (this.#hasAlreadyBeenPlayed(word, wordWheel)) {
-      return false;
+      return "ALREADY_BEEN_PLAYED";
     }
 
     if (this.#isNotInListOfValidWords(word)) {
-      return false;
+      return "NOT_IN_DICTIONARY";
     }
 
-    return true;
+    return null;
   }
 
   #doesNotIncludeCenterLetter(guess: WordWheelGuess): boolean {
