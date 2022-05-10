@@ -1,4 +1,4 @@
-type Letter =
+export type Letter =
   | "A"
   | "B"
   | "C"
@@ -26,18 +26,20 @@ type Letter =
   | "Y"
   | "Z";
 
+export type OuterLetters = [
+  Letter,
+  Letter,
+  Letter,
+  Letter,
+  Letter,
+  Letter,
+  Letter,
+  Letter
+];
+
 export interface WordWheelDefinition {
   centerLetter: Letter;
-  outerLetters: [
-    Letter,
-    Letter,
-    Letter,
-    Letter,
-    Letter,
-    Letter,
-    Letter,
-    Letter
-  ];
+  outerLetters: OuterLetters;
 }
 
 export interface WordWheelState {

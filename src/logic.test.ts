@@ -1,12 +1,12 @@
 import { wordWheelFactory } from "./factories";
-import { WordWheelLogic } from "./logic";
+import { Letter, OuterLetters, WordWheelLogic } from "./logic";
 
 describe("WordWheelLogic.update", () => {
   it("accepts a valid word", () => {
     const wordWheel = wordWheelFactory.build({
       definition: {
         centerLetter: "C",
-        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+        outerLetters: padOuterLetters(["A", "G", "E"]),
       },
     });
     const word = "CAGE";
@@ -22,7 +22,7 @@ describe("WordWheelLogic.update", () => {
     const wordWheel = wordWheelFactory.build({
       definition: {
         centerLetter: "C",
-        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+        outerLetters: padOuterLetters(["A", "G", "E"]),
       },
     });
     const word = "CAGE";
@@ -37,7 +37,7 @@ describe("WordWheelLogic.update", () => {
     const wordWheel = wordWheelFactory.build({
       definition: {
         centerLetter: "C",
-        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+        outerLetters: padOuterLetters(["A", "G", "E"]),
       },
     });
     const word = "AGE";
@@ -52,7 +52,7 @@ describe("WordWheelLogic.update", () => {
     const wordWheel = wordWheelFactory.build({
       definition: {
         centerLetter: "C",
-        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+        outerLetters: padOuterLetters(["A", "G", "E"]),
       },
     });
     const word = "CARE";
@@ -68,7 +68,7 @@ describe("WordWheelLogic.update", () => {
     const wordWheel = wordWheelFactory.build({
       definition: {
         centerLetter: "C",
-        outerLetters: ["A", "G", "E", "X", "X", "X", "X", "X"],
+        outerLetters: padOuterLetters(["A", "G", "E"]),
       },
       state: { words: [word] },
     });
@@ -79,3 +79,15 @@ describe("WordWheelLogic.update", () => {
     expect(result.valid).toBeFalsy();
   });
 });
+
+// ---- Helpers ---- //
+
+function padOuterLetters(letters: Letter[]): OuterLetters {
+  const padded: OuterLetters = ["X", "X", "X", "X", "X", "X", "X", "X"];
+
+  letters.forEach((l, index) => {
+    padded[index] = l;
+  });
+
+  return padded;
+}
