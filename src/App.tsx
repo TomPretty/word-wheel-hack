@@ -18,58 +18,60 @@ const WORD_WHEEL_DEFINITION: WordWheelDefinition = {
 
 const logic = new WordWheelLogic(WORDS);
 
+interface AppState {
+  wordWheel: WordWheel;
+  guess: WordWheelGuess;
+  error: WordWheelUpdateError | null;
+}
+
 function App() {
-  const [wordWheel, setWordWheel] = useState<WordWheel>({
-    definition: WORD_WHEEL_DEFINITION,
-    state: { words: [] },
+  const [state, setState] = useState<AppState>({
+    wordWheel: {
+      definition: WORD_WHEEL_DEFINITION,
+      state: { words: [] },
+    },
+    guess: [],
+    error: null,
   });
 
-  const [error, setError] = useState<WordWheelUpdateError | null>(null);
-
-  const [guess, setGuess] = useState<WordWheelGuess>([]);
-
   function toggleGuessElement(element: WordWheelGuessElement) {
-    if (guess.includes(element)) {
-      setGuess(guess.filter((el) => el !== element));
+    const newState: AppState = { ...state, error: null };
+    if (state.guess.includes(element)) {
+      newState.guess = state.guess.filter((el) => el !== element);
     } else {
-      setGuess([...guess, element]);
+      newState.guess = [...state.guess, element];
     }
-    resetError();
+    setState(newState);
   }
 
   function submit() {
-    resetError();
+    const newState: AppState = { ...state, error: null };
 
-    const update = logic.update(wordWheel, guess);
+    const update = logic.update(state.wordWheel, state.guess);
 
     if (update.valid) {
-      setWordWheel(update.wordWheel);
-      setGuess([]);
+      newState.wordWheel = update.wordWheel;
+      newState.guess = [];
     } else {
-      setError(update.error);
+      newState.error = update.error;
     }
+    setState(newState);
   }
 
   function reset() {
-    setGuess([]);
-    resetError();
+    setState({ ...state, guess: [], error: null });
   }
 
   function deleteLastElement() {
-    setGuess(guess.slice(0, -1));
-    resetError();
-  }
-
-  function resetError() {
-    setError(null);
+    setState({ ...state, guess: state.guess.slice(0, -1), error: null });
   }
 
   return (
     <div>
       <header>Word Wheel</header>
-      <p>Words: {wordWheel.state.words.join(", ")}</p>
-      <p>Word: {guessToWord(guess, wordWheel.definition)}</p>
-      {error && <p>Error: {error}</p>}
+      <p>Words: {state.wordWheel.state.words.join(", ")}</p>
+      <p>Word: {guessToWord(state.guess, state.wordWheel.definition)}</p>
+      {state.error && <p>Error: {state.error}</p>}
 
       <div>
         <button onClick={submit}>Submit</button>
@@ -78,8 +80,8 @@ function App() {
       </div>
 
       <WordWheelWheel
-        definition={wordWheel.definition}
-        guess={guess}
+        definition={state.wordWheel.definition}
+        guess={state.guess}
         toggleGuessElement={toggleGuessElement}
       />
     </div>
