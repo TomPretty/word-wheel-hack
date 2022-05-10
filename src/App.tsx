@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { WordWheel, WordWheelDefinition, WordWheelLogic } from "./logic";
+import {
+  guessToWord,
+  WordWheel,
+  WordWheelDefinition,
+  WordWheelGuess,
+  WordWheelGuessElement,
+  WordWheelLogic,
+} from "./logic";
 import "./App.css";
 import { WORDS } from "./words";
 
@@ -10,18 +17,15 @@ const WORD_WHEEL_DEFINITION: WordWheelDefinition = {
 
 const logic = new WordWheelLogic(WORDS);
 
-type GuessElement = "CENTER" | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-type Guess = GuessElement[];
-
 function App() {
   const [wordWheel, setWordWheel] = useState<WordWheel>({
     definition: WORD_WHEEL_DEFINITION,
     state: { words: [] },
   });
 
-  const [guess, setGuess] = useState<Guess>([]);
+  const [guess, setGuess] = useState<WordWheelGuess>([]);
 
-  function toggleGuessElement(element: GuessElement) {
+  function toggleGuessElement(element: WordWheelGuessElement) {
     if (guess.includes(element)) {
       setGuess(guess.filter((el) => el !== element));
     } else {
@@ -30,10 +34,7 @@ function App() {
   }
 
   function submit() {
-    const update = logic.update(
-      wordWheel,
-      guessToWord(guess, wordWheel.definition)
-    );
+    const update = logic.update(wordWheel, guess);
 
     if (update.valid) {
       setWordWheel(update.wordWheel);
@@ -53,7 +54,7 @@ function App() {
     <div>
       <header>Word Wheel</header>
       <p>Words: {wordWheel.state.words.join(", ")}</p>
-      <p>Word: {guessToWord(guess, WORD_WHEEL_DEFINITION)}</p>
+      <p>Word: {guessToWord(guess, wordWheel.definition)}</p>
 
       <div>
         <button onClick={submit}>Submit</button>
@@ -62,7 +63,7 @@ function App() {
       </div>
 
       <WordWheelWheel
-        definition={WORD_WHEEL_DEFINITION}
+        definition={wordWheel.definition}
         guess={guess}
         toggleGuessElement={toggleGuessElement}
       />
@@ -74,8 +75,8 @@ function App() {
 
 interface WordWhelWheelProps {
   definition: WordWheelDefinition;
-  guess: Guess;
-  toggleGuessElement: (element: GuessElement) => void;
+  guess: WordWheelGuess;
+  toggleGuessElement: (element: WordWheelGuessElement) => void;
 }
 
 function WordWheelWheel({
@@ -83,7 +84,7 @@ function WordWheelWheel({
   guess,
   toggleGuessElement,
 }: WordWhelWheelProps) {
-  function isSelected(element: GuessElement) {
+  function isSelected(element: WordWheelGuessElement) {
     return guess.includes(element);
   }
 
@@ -229,19 +230,6 @@ function WordWheelWheel({
       </g>
     </svg>
   );
-}
-
-// ---- Helper functions ---- //
-
-function guessToWord(guess: Guess, definition: WordWheelDefinition) {
-  const letters = guess.map((el) => {
-    if (el === "CENTER") {
-      return definition.centerLetter;
-    }
-    return definition.outerLetters[el];
-  });
-
-  return letters.join("");
 }
 
 export default App;

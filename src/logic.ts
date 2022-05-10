@@ -51,6 +51,10 @@ export interface WordWheel {
   state: WordWheelState;
 }
 
+export type WordWheelGuessElement = "CENTER" | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export type WordWheelGuess = WordWheelGuessElement[];
+
 interface WordWheelUpdate {
   valid: boolean;
   wordWheel: WordWheel;
@@ -63,17 +67,20 @@ export class WordWheelLogic {
     this.validWords = validWords;
   }
 
-  update(wordWheel: WordWheel, word: string): WordWheelUpdate {
-    if (this.#isValid(wordWheel, word)) {
-      return this.#validUpdate(wordWheel, word);
+  update(wordWheel: WordWheel, guess: WordWheelGuess): WordWheelUpdate {
+    if (this.#isValid(wordWheel, guess)) {
+      return this.#validUpdate(wordWheel, guess);
     }
     return this.#invalidUpdate(wordWheel);
   }
 
-  #validUpdate(wordWheel: WordWheel, word: string): WordWheelUpdate {
+  #validUpdate(wordWheel: WordWheel, guess: WordWheelGuess): WordWheelUpdate {
     return {
       valid: true,
-      wordWheel: this.#addValidWord(wordWheel, word),
+      wordWheel: this.#addValidWord(
+        wordWheel,
+        guessToWord(guess, wordWheel.definition)
+      ),
     };
   }
 
@@ -91,50 +98,57 @@ export class WordWheelLogic {
     return { valid: false, wordWheel };
   }
 
-  #isValid(wordWheel: WordWheel, word: string): boolean {
-    return (
-      this.#includesCenterLetter(wordWheel, word) &&
-      this.#onlyUsesAvailableLetters(wordWheel, word) &&
-      this.#hasNotAlreadyBeenPlayed(wordWheel, word) &&
-      this.#isInListOfValidWords(word)
-    );
-  }
-
-  #includesCenterLetter(wordWheel: WordWheel, word: string): boolean {
-    return word.includes(wordWheel.definition.centerLetter);
-  }
-
-  #isInListOfValidWords(word: string): boolean {
-    return this.validWords.includes(word);
-  }
-
-  #hasNotAlreadyBeenPlayed(wordWheel: WordWheel, word: string): boolean {
-    return !wordWheel.state.words.includes(word);
-  }
-
-  #onlyUsesAvailableLetters(wordWheel: WordWheel, word: string): boolean {
-    const availableLetters = this.#toLetterCounts(
-      wordWheel.definition.centerLetter +
-        wordWheel.definition.outerLetters.join("")
-    );
-    const usedLetters = this.#toLetterCounts(word);
-
-    for (const [letter, count] of Object.entries(usedLetters)) {
-      if (!(letter in availableLetters) || availableLetters[letter] < count) {
-        return false;
-      }
+  #isValid(wordWheel: WordWheel, guess: WordWheelGuess): boolean {
+    if (this.#doesNotIncludeCenterLetter(guess)) {
+      return false;
     }
+
+    if (this.#usesDuplicateLetters(guess)) {
+      return false;
+    }
+
+    const word = guessToWord(guess, wordWheel.definition);
+
+    if (this.#hasAlreadyBeenPlayed(word, wordWheel)) {
+      return false;
+    }
+
+    if (this.#isNotInListOfValidWords(word)) {
+      return false;
+    }
+
     return true;
   }
 
-  #toLetterCounts(word: string): Record<string, number> {
-    const counts: Record<string, number> = {};
-    for (const c of word) {
-      if (!(c in counts)) {
-        counts[c] = 0;
-      }
-      counts[c] += 1;
-    }
-    return counts;
+  #doesNotIncludeCenterLetter(guess: WordWheelGuess): boolean {
+    return !guess.includes("CENTER");
   }
+
+  #usesDuplicateLetters(guess: WordWheelGuess): boolean {
+    return new Set(guess).size !== guess.length;
+  }
+
+  #isNotInListOfValidWords(word: string): boolean {
+    return !this.validWords.includes(word);
+  }
+
+  #hasAlreadyBeenPlayed(word: string, wordWheel: WordWheel): boolean {
+    return wordWheel.state.words.includes(word);
+  }
+}
+
+// ---- Helper functions ---- //
+
+export function guessToWord(
+  guess: WordWheelGuess,
+  definition: WordWheelDefinition
+) {
+  const letters = guess.map((el) => {
+    if (el === "CENTER") {
+      return definition.centerLetter;
+    }
+    return definition.outerLetters[el];
+  });
+
+  return letters.join("");
 }
