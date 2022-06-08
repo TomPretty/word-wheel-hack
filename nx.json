@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "temp-workspace",
+  "npmScope": "puzzles",
   "affected": {
     "defaultBase": "main"
   },
@@ -15,12 +15,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "ZmI3NzE5ZmUtNDM0Yy00MDg2LTg0NGEtMjY2OTQzOGYzZmJifHJlYWQtd3JpdGU="
       }
     }
