@@ -27,7 +27,7 @@ describe("WordWheelLogic.update", () => {
     );
   });
 
-  it("rejects an invalid word", () => {
+  it("rejects a word that's not in the dictionary", () => {
     const wordWheel = wordWheelFactory.build({
       definition: {
         centerLetter: "C",
@@ -45,7 +45,7 @@ describe("WordWheelLogic.update", () => {
     );
   });
 
-  it("rejects a valid word if it doesn't use the center letter", () => {
+  it("rejects a word that doesn't use the center letter", () => {
     const wordWheel = wordWheelFactory.build({
       definition: {
         centerLetter: "C",
@@ -63,7 +63,7 @@ describe("WordWheelLogic.update", () => {
     );
   });
 
-  it("rejects a valid word if it uses duplicate letters", () => {
+  it("rejects a word that uses duplicate letters", () => {
     const wordWheel = wordWheelFactory.build({
       definition: {
         centerLetter: "H",
@@ -81,7 +81,7 @@ describe("WordWheelLogic.update", () => {
     );
   });
 
-  it("rejects a valid word if it has already been played", () => {
+  it("rejects a word that has already been played", () => {
     const word = "CAGE";
     const wordWheel = wordWheelFactory.build({
       definition: {
