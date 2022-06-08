@@ -1,30 +1,30 @@
 export type Letter =
-  | "A"
-  | "B"
-  | "C"
-  | "D"
-  | "E"
-  | "F"
-  | "G"
-  | "H"
-  | "I"
-  | "J"
-  | "K"
-  | "L"
-  | "M"
-  | "N"
-  | "O"
-  | "P"
-  | "Q"
-  | "R"
-  | "S"
-  | "T"
-  | "U"
-  | "V"
-  | "W"
-  | "X"
-  | "Y"
-  | "Z";
+  | 'A'
+  | 'B'
+  | 'C'
+  | 'D'
+  | 'E'
+  | 'F'
+  | 'G'
+  | 'H'
+  | 'I'
+  | 'J'
+  | 'K'
+  | 'L'
+  | 'M'
+  | 'N'
+  | 'O'
+  | 'P'
+  | 'Q'
+  | 'R'
+  | 'S'
+  | 'T'
+  | 'U'
+  | 'V'
+  | 'W'
+  | 'X'
+  | 'Y'
+  | 'Z';
 
 export type OuterLetters = [
   Letter,
@@ -51,15 +51,15 @@ export interface WordWheel {
   state: WordWheelState;
 }
 
-export type WordWheelGuessElement = "CENTER" | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type WordWheelGuessElement = 'CENTER' | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export type WordWheelGuess = WordWheelGuessElement[];
 
 export type WordWheelUpdateError =
-  | "DOES_NOT_USE_MIDDLE_LETTER"
-  | "USES_DUPLICATE_LETTER"
-  | "ALREADY_BEEN_PLAYED"
-  | "NOT_IN_DICTIONARY";
+  | 'DOES_NOT_USE_MIDDLE_LETTER'
+  | 'USES_DUPLICATE_LETTER'
+  | 'ALREADY_BEEN_PLAYED'
+  | 'NOT_IN_DICTIONARY';
 
 export interface WordWheelUpdateInvalid {
   valid: false;
@@ -120,28 +120,28 @@ export class WordWheelLogic {
     guess: WordWheelGuess
   ): WordWheelUpdateError | null {
     if (this.#doesNotIncludeCenterLetter(guess)) {
-      return "DOES_NOT_USE_MIDDLE_LETTER";
+      return 'DOES_NOT_USE_MIDDLE_LETTER';
     }
 
     if (this.#usesDuplicateLetters(guess)) {
-      return "USES_DUPLICATE_LETTER";
+      return 'USES_DUPLICATE_LETTER';
     }
 
     const word = guessToWord(guess, wordWheel.definition);
 
     if (this.#hasAlreadyBeenPlayed(word, wordWheel)) {
-      return "ALREADY_BEEN_PLAYED";
+      return 'ALREADY_BEEN_PLAYED';
     }
 
     if (this.#isNotInListOfValidWords(word)) {
-      return "NOT_IN_DICTIONARY";
+      return 'NOT_IN_DICTIONARY';
     }
 
     return null;
   }
 
   #doesNotIncludeCenterLetter(guess: WordWheelGuess): boolean {
-    return !guess.includes("CENTER");
+    return !guess.includes('CENTER');
   }
 
   #usesDuplicateLetters(guess: WordWheelGuess): boolean {
@@ -164,11 +164,11 @@ export function guessToWord(
   definition: WordWheelDefinition
 ) {
   const letters = guess.map((el) => {
-    if (el === "CENTER") {
+    if (el === 'CENTER') {
       return definition.centerLetter;
     }
     return definition.outerLetters[el];
   });
 
-  return letters.join("");
+  return letters.join('');
 }
