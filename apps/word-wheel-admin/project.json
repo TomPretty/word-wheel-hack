@@ -1,0 +1,83 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/word-wheel-admin/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/word-wheel-admin",
+        "index": "apps/word-wheel-admin/src/index.html",
+        "baseHref": "/",
+        "main": "apps/word-wheel-admin/src/main.tsx",
+        "polyfills": "apps/word-wheel-admin/src/polyfills.ts",
+        "tsConfig": "apps/word-wheel-admin/tsconfig.app.json",
+        "assets": [
+          "apps/word-wheel-admin/src/favicon.ico",
+          "apps/word-wheel-admin/src/assets"
+        ],
+        "styles": ["apps/word-wheel-admin/src/styles.css"],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/word-wheel-admin/src/environments/environment.ts",
+              "with": "apps/word-wheel-admin/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "word-wheel-admin:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "word-wheel-admin:build:development"
+        },
+        "production": {
+          "buildTarget": "word-wheel-admin:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/word-wheel-admin/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/word-wheel-admin"],
+      "options": {
+        "jestConfig": "apps/word-wheel-admin/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

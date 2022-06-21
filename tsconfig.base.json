@@ -19,7 +19,8 @@
       "@puzzles/word-wheel-types": ["libs/word-wheel-types/src/index.ts"],
       "@puzzles/word-wheel-types-factories": [
         "libs/word-wheel-types-factories/src/index.ts"
-      ]
+      ],
+      "@puzzles/word-wheel-words": ["libs/word-wheel-words/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

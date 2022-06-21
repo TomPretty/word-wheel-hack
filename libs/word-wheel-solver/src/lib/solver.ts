@@ -4,13 +4,15 @@ export function solve(
   definition: WordWheelDefinition,
   dictionary: string[]
 ): string[] {
+  const dict = new Set(dictionary);
+
   function _solve(used: Letter[], available: Letter[]): Set<string> {
     const words = new Set<string>();
 
     if (used.includes(definition.centerLetter)) {
       const word = used.join('');
 
-      if (dictionary.includes(word)) {
+      if (dict.has(word)) {
         words.add(word);
       }
     }
@@ -18,7 +20,7 @@ export function solve(
     available.forEach((letter, i) => {
       const newWords = _solve(
         [...used, letter],
-        [...available.slice(0, i), ...available.slice(i + 1, -1)]
+        [...available.slice(0, i), ...available.slice(i + 1)]
       );
 
       newWords.forEach((word) => words.add(word));
