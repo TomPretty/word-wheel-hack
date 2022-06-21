@@ -51,7 +51,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "word-wheel-admin:build",
-        "hmr": true
+        "hmr": true,
+        "proxyConfig": "apps/word-wheel-admin/proxy.conf.json"
       },
       "configurations": {
         "development": {

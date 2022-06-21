@@ -41,3 +41,9 @@ export interface WordWheelDefinition {
   centerLetter: Letter;
   outerLetters: OuterLetters;
 }
+
+export interface WordWheelCreateRequest {
+  puzzleNumber: number;
+  definition: WordWheelDefinition;
+  // ...other meta data...
+}

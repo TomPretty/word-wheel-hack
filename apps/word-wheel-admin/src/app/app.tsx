@@ -1,14 +1,34 @@
 import { solve } from '@puzzles/word-wheel-solver';
-import { Letter, WordWheelDefinition } from '@puzzles/word-wheel-types';
+import {
+  WordWheelCreateRequest,
+  Letter,
+  WordWheelDefinition,
+} from '@puzzles/word-wheel-types';
 import { WORDS } from '@puzzles/word-wheel-words';
 import { useState } from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
 
 export function App() {
-  const [definition, setDefinition] = useState<WordWheelDefinition | undefined>(
-    undefined
-  );
+  const [createRequest, setCreateRequest] = useState<
+    WordWheelCreateRequest | undefined
+  >(undefined);
+
+  async function saveDefinition() {
+    if (!createRequest) {
+      return;
+    }
+
+    const res = await fetch('/api/word-wheel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(createRequest),
+    });
+
+    const json = await res.json();
+
+    console.log('[API] - ', { json });
+  }
 
   return (
     <div>
@@ -20,17 +40,17 @@ export function App() {
         <section>
           <h2>Create Word Wheel</h2>
 
-          <WordWheelForm onCreateWordWheel={setDefinition} />
+          <WordWheelForm onSubmit={setCreateRequest} />
         </section>
 
-        {definition && (
+        {createRequest && (
           <section>
             <h2>Word Wheel</h2>
 
-            <WordWheelSummary definition={definition} />
+            <WordWheelSummary definition={createRequest.definition} />
 
             <div>
-              <button>Save</button>
+              <button onClick={() => saveDefinition()}>Save</button>
             </div>
           </section>
         )}
@@ -40,10 +60,11 @@ export function App() {
 }
 
 interface WordWheelFormProps {
-  onCreateWordWheel: (definition: WordWheelDefinition) => void;
+  onSubmit: (createRequest: WordWheelCreateRequest) => void;
 }
 
-function WordWheelForm({ onCreateWordWheel }: WordWheelFormProps) {
+function WordWheelForm({ onSubmit }: WordWheelFormProps) {
+  const [puzzleNumberInput, setPuzzleNumberInput] = useState('');
   const [centerLetter, setCenterLetter] = useState('');
   const [outerLetters, setOutterLetters] = useState({
     1: '',
@@ -55,6 +76,12 @@ function WordWheelForm({ onCreateWordWheel }: WordWheelFormProps) {
     7: '',
     8: '',
   });
+
+  const onPuzzleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    // check it's a number
+    setPuzzleNumberInput(value);
+  };
 
   const onCenterLetterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -71,8 +98,10 @@ function WordWheelForm({ onCreateWordWheel }: WordWheelFormProps) {
       setOutterLetters({ ...outerLetters, [letterId]: value.toUpperCase() });
     };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    const puzzleNumber = parseInt(puzzleNumberInput);
 
     const definition: WordWheelDefinition = {
       centerLetter: centerLetter as Letter,
@@ -88,11 +117,21 @@ function WordWheelForm({ onCreateWordWheel }: WordWheelFormProps) {
       ],
     };
 
-    onCreateWordWheel(definition);
+    onSubmit({ puzzleNumber, definition });
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="center-letter">Puzzle number</label>
+        <input
+          id="puzzle-number"
+          type="text"
+          value={puzzleNumberInput}
+          onChange={onPuzzleNumberChange}
+        />
+      </div>
+
       <div>
         <label htmlFor="center-letter">Center Letter</label>
         <input

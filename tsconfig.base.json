@@ -13,12 +13,16 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
       "@puzzles/word-wheel-solver": ["libs/word-wheel-solver/src/index.ts"],
       "@puzzles/word-wheel-types": ["libs/word-wheel-types/src/index.ts"],
       "@puzzles/word-wheel-types-factories": [
         "libs/word-wheel-types-factories/src/index.ts"
+      ],
+      "@puzzles/word-wheel-types-validators": [
+        "libs/word-wheel-types-validators/src/index.ts"
       ],
       "@puzzles/word-wheel-words": ["libs/word-wheel-words/src/index.ts"]
     }
