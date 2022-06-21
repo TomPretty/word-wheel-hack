@@ -1,4 +1,4 @@
-import { solve } from '@puzzles/word-wheel-solver';
+import { solve, trieSolve } from '@puzzles/word-wheel-solver';
 import {
   WordWheelCreateRequest,
   Letter,
@@ -238,7 +238,8 @@ interface WordWheelSummaryProps {
 }
 
 function WordWheelSummary({ definition }: WordWheelSummaryProps) {
-  const solutions = solve(definition, WORDS);
+  // const solutions = solve(definition, WORDS);
+  const solutions = trieSolve(definition);
 
   return (
     <div>
