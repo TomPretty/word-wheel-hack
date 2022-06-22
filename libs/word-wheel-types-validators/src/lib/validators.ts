@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const Letter = z.union([
+export const LetterSchema = z.union([
   z.literal('A'),
   z.literal('B'),
   z.literal('C'),
@@ -30,16 +30,16 @@ export const Letter = z.union([
 ]);
 
 export const WordWheelDefinitionSchema = z.object({
-  centerLetter: Letter,
+  centerLetter: LetterSchema,
   outerLetters: z.tuple([
-    Letter,
-    Letter,
-    Letter,
-    Letter,
-    Letter,
-    Letter,
-    Letter,
-    Letter,
+    LetterSchema,
+    LetterSchema,
+    LetterSchema,
+    LetterSchema,
+    LetterSchema,
+    LetterSchema,
+    LetterSchema,
+    LetterSchema,
   ]),
 });
 
