@@ -1,12 +1,14 @@
-import { trieSolve } from '@puzzles/word-wheel-solver';
+import { TrieSolver } from '@puzzles/word-wheel-solver';
 import { WordWheelDefinition } from '@puzzles/word-wheel-types';
+import { useRef } from 'react';
+import { WORDS } from '@puzzles/word-wheel-words';
 
 interface WordWheelSummaryProps {
   definition: WordWheelDefinition;
 }
 
 export function WordWheelSummary({ definition }: WordWheelSummaryProps) {
-  const solutions = trieSolve(definition);
+  const solutions = useSolutions(definition);
 
   return (
     <div>
@@ -22,4 +24,12 @@ export function WordWheelSummary({ definition }: WordWheelSummaryProps) {
       </dl>
     </div>
   );
+}
+
+// ---- Hooks ---- //
+
+function useSolutions(definition: WordWheelDefinition) {
+  const solverRef = useRef(new TrieSolver(WORDS));
+
+  return solverRef.current.solve(definition);
 }

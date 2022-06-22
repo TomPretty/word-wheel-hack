@@ -1,6 +1,6 @@
-import { Letter, OuterLetters } from '@puzzles/word-wheel-types';
 import { wordWheelDefinitionFactory } from '@puzzles/word-wheel-types-factories';
-import { solve } from './solver';
+import { BruteForceSolver } from './brute-force-solver';
+import { padOuterLetters } from '../spec-helpers';
 
 describe('solve', () => {
   it('finds all of the valid words', () => {
@@ -9,8 +9,9 @@ describe('solve', () => {
       outerLetters: padOuterLetters(['A', 'P', 'T']),
     });
     const dictionary = ['CAP', 'CAT'];
+    const solver = new BruteForceSolver(dictionary);
 
-    const found = solve(definition, dictionary);
+    const found = solver.solve(definition);
 
     expect(found).toEqual(dictionary);
   });
@@ -21,21 +22,10 @@ describe('solve', () => {
       outerLetters: padOuterLetters(['C', 'A', 'P']),
     });
     const dictionary = ['CAP'];
+    const solver = new BruteForceSolver(dictionary);
 
-    const found = solve(definition, dictionary);
+    const found = solver.solve(definition);
 
     expect(found).toEqual([]);
   });
 });
-
-// ---- Helpers ---- //
-
-function padOuterLetters(letters: Letter[]): OuterLetters {
-  const padded: OuterLetters = ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'];
-
-  letters.forEach((l, index) => {
-    padded[index] = l;
-  });
-
-  return padded;
-}
