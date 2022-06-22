@@ -30,8 +30,8 @@ export function trieSolve(definition: WordWheelDefinition): string[] {
       const letterId = current.available.indexOf(letter);
       if (letterId > -1) {
         const newAvailable = [
-          ...available.slice(0, letterId),
-          ...available.slice(letterId),
+          ...current.available.slice(0, letterId),
+          ...current.available.slice(letterId + 1),
         ];
 
         frontier.push({ available: newAvailable, trie });

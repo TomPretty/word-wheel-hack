@@ -1,11 +1,8 @@
 import { Container } from '@guardian/source-react-components';
-import { trieSolve } from '@puzzles/word-wheel-solver';
-import {
-  WordWheelCreateRequest,
-  WordWheelDefinition,
-} from '@puzzles/word-wheel-types';
+import { WordWheelCreateRequest } from '@puzzles/word-wheel-types';
 import { useState } from 'react';
 import { WordWheelForm } from './WordWheelForm';
+import { WordWheelSummary } from './WordWheelSummary';
 
 export function App() {
   const [createRequest, setCreateRequest] = useState<
@@ -50,35 +47,12 @@ export function App() {
             <WordWheelSummary definition={createRequest.definition} />
 
             <div>
-              <button onClick={() => saveDefinition()}>Save</button>
+              <button onClick={saveDefinition}>Save</button>
             </div>
           </section>
         )}
       </main>
     </Container>
-  );
-}
-
-interface WordWheelSummaryProps {
-  definition: WordWheelDefinition;
-}
-
-function WordWheelSummary({ definition }: WordWheelSummaryProps) {
-  const solutions = trieSolve(definition);
-
-  return (
-    <div>
-      <dl>
-        <dt>Center Letter</dt>
-        <dd>{definition.centerLetter}</dd>
-
-        <dt>Outer Letters</dt>
-        <dd>{definition.outerLetters.join(', ')}</dd>
-
-        <dt>Solutions</dt>
-        <dd>{solutions.join(', ')}</dd>
-      </dl>
-    </div>
   );
 }
 
